@@ -192,3 +192,78 @@ PostgreSQLをシステムの正本データ（Source of Truth）とする。
 * Redisはキャッシュとして扱う
 * Elasticsearchは検索用コピーとして扱う
 * 更新処理は必ずPostgreSQLを経由する
+
+
+# ADR-008 RabbitMQによる非同期処理を採用する
+
+## 背景
+
+商品更新時に検索Index更新などの副作用を同期実行すると、APIレスポンスが遅くなる可能性がある。
+
+## 決定
+
+RabbitMQを利用して非同期処理を行う。
+
+## 理由
+
+- 商品更新処理と検索Index更新を分離できる
+- 外部システム障害の影響を小さくできる
+- Retry / DLQ による失敗処理を設計できる
+
+---
+
+# ADR-009 Outbox Patternを採用する
+
+## 背景
+
+DB更新後にRabbitMQ送信へ失敗すると、イベントが消失する可能性がある。
+
+## 決定
+
+DB更新とOutbox保存を同一Transactionで行い、別PublisherがRabbitMQへ送信する。
+
+## 理由
+
+- DB更新とイベント保存の整合性を保てる
+- RabbitMQ停止時もイベントを失わない
+- 後続処理を再送できる
+
+---
+
+# ADR-010 Consumer側で冪等性を担保する
+
+## 背景
+
+RabbitMQはAt Least Once配送のため、同じイベントが複数回届く可能性がある。
+
+## 決定
+
+processed_events テーブルで処理済みeventIdを管理する。
+
+## 理由
+
+- 重複イベントによる二重処理を防げる
+- 再送に強いConsumer設計にできる
+
+---
+
+# ADR-011 OpenSearchを検索用コピーとして利用する
+
+## 背景
+
+PostgreSQLのLIKE検索だけでは、検索要件が増えた場合に限界がある。
+
+## 決定
+
+OpenSearchを商品検索用Indexとして利用する。
+
+## 理由
+
+- 商品検索をDB負荷から分離できる
+- 検索専用のDocument設計ができる
+- Reindex APIによりDBから再構築できる
+
+## 影響
+
+- PostgreSQLとOpenSearchの間に一時的な不整合が発生する
+- Outbox + RabbitMQ により最終的整合性を目指す

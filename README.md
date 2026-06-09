@@ -78,17 +78,44 @@ Spring Bootを利用した商品管理APIです。
 * BaseEntity
 * JPA Auditing
 
+## キャッシュ
+
+* Redis Cache
+* Cache Aside Pattern
+* ETag
+* Cache-Control
+* Nginx Cache
+
+## 非同期処理
+
+* RabbitMQ
+* Producer / Consumer
+* Retry
+* Dead Letter Queue
+* Idempotency
+* Outbox Pattern
+
+## 検索
+
+* OpenSearch
+* 商品検索API
+* 商品更新時の非同期Index更新
+* 商品削除時の非同期Index削除
+* Reindex API
+
 ---
 
 # API一覧
 
-| Method | Path               | Description |
-| ------ | ------------------ | ----------- |
-| GET    | /api/products      | 商品一覧取得      |
-| GET    | /api/products/{id} | 商品詳細取得      |
-| POST   | /api/products      | 商品作成        |
-| PUT    | /api/products/{id} | 商品更新        |
-| DELETE | /api/products/{id} | 商品削除        |
+| Method | Path                             | Description    |
+| ------ | -------------------------------- | -------------- |
+| GET    | /api/products                    | 商品一覧取得     |
+| GET    | /api/products/{id}               | 商品詳細取得     |
+| POST   | /api/products                    | 商品作成        |
+| PUT    | /api/products/{id}               | 商品更新        |
+| DELETE | /api/products/{id}               | 商品削除        |
+| GET    | /api/products/search?keyword=xxx | 商品検索        |
+| POST   | /api/admin/search/reindex        | 商品Index再構築 |
 
 ---
 
@@ -158,30 +185,24 @@ src/main/java
 
 # 今後の実装予定
 
-## Phase2 パフォーマンス改善
+## Phase4 認証・認可
 
-* Redis Cache
-* Cache Aside Pattern
-* ETag
-* Cache-Control
-* Nginx Cache
+* Spring Security
+* Login API
+* JWT
+* Role-based Access Control
 
-## Phase3 非同期処理・検索
+## Phase5 可用性・運用
 
-* RabbitMQ
-* Outbox Pattern
-* Idempotency
-* Dead Letter Queue
-* Elasticsearch
-
-## Phase4 可用性・運用
-
-* Retry
 * Timeout
+* Retry
 * Circuit Breaker
 * Monitoring
-* Read Replica
-* Sharding
+
+## Optional
+
+* Kafka比較
+* Kubernetes manifest
 
 ---
 

@@ -3,6 +3,7 @@ package com.example.ecdemo.product.repository;
 import com.example.ecdemo.product.dto.ProductListResponse;
 import com.example.ecdemo.product.entity.Product;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -37,5 +38,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         where p.id = :id
     """)
     Optional<Product> findByIdWithCategory(Long id);
+
+    @Query("""
+        select p
+        from Product p
+        join fetch p.category
+    """)
+    List<Product> findAllWithCategory();
 
 }
