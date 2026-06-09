@@ -11,9 +11,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Product API" , description = "商品API")
@@ -38,8 +42,26 @@ public class ProductController {
 
     @Operation(summary = "商品詳細取得")
     @GetMapping("/{id}")
-    public ProductDetailResponse getProduct(@PathVariable Long id) {
-        return productService.getProduct(id);
+    public ResponseEntity<ProductDetailResponse> getProduct(
+        @PathVariable Long id,
+        @RequestHeader(value = "If-None-Match", required = false) String ifNoneMatch
+    ) {
+
+        ProductDetailResponse response = productService.getProduct(id);
+
+        String eTag = "\"" + response.id() + "-" + response.version() + "\"";
+
+        if (eTag.equals(ifNoneMatch)) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                    .eTag(eTag)
+                    .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
+                    .build();
+        }
+
+        return ResponseEntity.ok()
+                .eTag(eTag)
+                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
+                .body(response);
     }
 
     @Operation(summary = "商品作成")

@@ -5,6 +5,13 @@ spring:
     password: product_password
     driver-class-name: org.postgresql.Driver
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: redis
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -15,3 +22,9 @@ spring:
 
   flyway:
     enabled: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest

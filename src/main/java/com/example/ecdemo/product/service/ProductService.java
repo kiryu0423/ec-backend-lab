@@ -9,9 +9,12 @@ import com.example.ecdemo.product.dto.ProductDetailResponse;
 import com.example.ecdemo.product.dto.ProductListResponse;
 import com.example.ecdemo.product.dto.UpdateProductRequest;
 import com.example.ecdemo.product.entity.Product;
+import com.example.ecdemo.product.event.ProductEventPublisher;
 import com.example.ecdemo.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductEventPublisher productEventPublisher;
 
     public Page<ProductListResponse> getProducts(
         Long categoryId,
@@ -39,6 +43,7 @@ public class ProductService {
         );
     }
 
+    @Cacheable(value = "productDetail", key = "#id")
     public ProductDetailResponse getProduct(Long id) {
         Product product = productRepository.findByIdWithCategory(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
@@ -65,6 +70,7 @@ public class ProductService {
     }
 
     @Transactional
+    @CacheEvict(value = "productDetail", key = "#id")
     public ProductDetailResponse updateProduct(Long id, UpdateProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
@@ -80,10 +86,13 @@ public class ProductService {
                 category
         );
 
+        productEventPublisher.publishProductUpdated(id);
+
         return ProductDetailResponse.from(product);
     }
 
     @Transactional
+    @CacheEvict(value = "productDetail", key = "#id")
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException(id);
