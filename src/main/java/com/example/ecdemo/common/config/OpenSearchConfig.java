@@ -14,6 +14,10 @@ public class OpenSearchConfig {
         return new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("localhost", 9200, "http")
+                ).setRequestConfigCallback(requestConfigBuilder ->
+                    requestConfigBuilder
+                        .setConnectTimeout(1000)
+                        .setSocketTimeout(2000)
                 )
         );
     }

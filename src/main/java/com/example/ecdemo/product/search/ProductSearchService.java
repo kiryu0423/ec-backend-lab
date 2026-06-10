@@ -3,6 +3,8 @@ package com.example.ecdemo.product.search;
 import com.example.ecdemo.product.entity.Product;
 import com.example.ecdemo.product.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 
 import org.opensearch.action.delete.DeleteRequest;
@@ -45,6 +47,10 @@ public class ProductSearchService {
         }
     }
 
+    @CircuitBreaker(
+        name = "openSearch",
+        fallbackMethod = "fallbackSearch"
+    )
     public List<ProductDocument> search(String keyword) {
         try {
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
@@ -102,5 +108,12 @@ public class ProductSearchService {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to delete product document", e);
         }
+    }
+
+    public List<ProductDocument> fallbackSearch(
+            String keyword,
+            Throwable e
+    ) {
+        return List.of();
     }
 }

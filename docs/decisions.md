@@ -357,3 +357,47 @@ USER / ADMIN のRoleを定義し、APIごとに認可制御を行う。
 
 - usersテーブルにroleを保持する
 - JWTにrole claimを含める
+
+# ADR-016 ActuatorによるHealth Check / Metricsを導入する
+
+## 背景
+
+アプリケーションやミドルウェアの状態を外部から確認できるようにしたい。
+
+## 決定
+
+Spring Boot Actuatorを導入する。
+
+## 理由
+
+- DB / Redis / RabbitMQ / OpenSearch の疎通状態を確認できる
+- HTTPリクエスト、JVM、HikariCPなどのMetricsを確認できる
+- 障害調査の入口になる
+
+## 影響
+
+- /actuator/health などのエンドポイントを公開する
+- SecurityConfigでActuatorへのアクセス制御を行う
+
+---
+
+# ADR-017 OpenSearchにCircuit Breakerを適用する
+
+## 背景
+
+OpenSearch停止時に検索APIが毎回失敗し、アプリケーション側のリソースを消費し続ける可能性がある。
+
+## 決定
+
+Resilience4j Circuit BreakerをOpenSearch検索処理に適用する。
+
+## 理由
+
+- OpenSearch障害時に呼び出しを遮断できる
+- 検索APIだけを縮退運転できる
+- 商品一覧・商品詳細などの主要APIへの影響を抑えられる
+
+## 影響
+
+- OpenSearch障害時は検索結果として空配列を返す
+- Circuit Breakerの状態はActuatorで確認する

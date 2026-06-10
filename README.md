@@ -121,9 +121,17 @@ Spring Bootを利用した商品管理APIです。
 * Role-Based Access Control
 * 401 / 403 Error Handling
 
----
+### 可用性・運用
 
-# API一覧
+* Spring Boot Actuator
+* Health Check
+* Metrics
+* OpenSearch Custom HealthIndicator
+* OpenSearch Client Timeout
+* Resilience4j Circuit Breaker
+* Fallback
+
+---
 
 # API一覧
 
@@ -158,6 +166,14 @@ Spring Bootを利用した商品管理APIです。
 |---|---|---|---|
 | POST | /api/admin/search/reindex | OpenSearchのIndexを再構築 | ADMIN |
 
+## 運用
+
+| Method | Path | 説明 | 認可 |
+|---|---|---|---|
+| GET | /actuator/health | Health Check | 公開または制限 |
+| GET | /actuator/metrics | Metrics一覧 | 公開または制限 |
+| GET | /actuator/circuitbreakers | Circuit Breaker状態確認 | 公開または制限 |
+
 ---
 
 # ローカル起動
@@ -190,29 +206,6 @@ OpenAPI
 http://localhost:8080/v3/api-docs
 ```
 
----
-
-# プロジェクト構成
-
-```text
-src/main/java
-├── common
-│   ├── config
-│   ├── entity
-│   └── exception
-├── category
-│   ├── entity
-│   └── repository
-└── product
-    ├── controller
-    ├── dto
-    ├── entity
-    ├── repository
-    └── service
-```
-
----
-
 # 設計方針
 
 * PostgreSQLを正本データとして扱う
@@ -225,13 +218,6 @@ src/main/java
 ---
 
 # 今後の実装予定
-
-## Phase5 可用性・運用
-
-* Timeout
-* Retry
-* Circuit Breaker
-* Monitoring
 
 ## Optional
 

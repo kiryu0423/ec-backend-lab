@@ -106,14 +106,27 @@
 
 ## Phase5 可用性・運用
 
-状態: 未着手
+状態: 完了
 
-### 実装予定
+### 実装内容
 
+* Spring Boot Actuator
+* Health Check
+* Metrics
+* OpenSearch Custom HealthIndicator
+* OpenSearch Client Timeout
+* Resilience4j Circuit Breaker
+* Fallback処理
+* Circuit Breaker状態確認
+
+### 学習ポイント
+
+* Health Check
+* Metrics
+* Graceful Degradation
 * Timeout
-* Retry Policy
 * Circuit Breaker
-* Monitoring
+* CLOSED / OPEN / HALF_OPEN
 
 ---
 
