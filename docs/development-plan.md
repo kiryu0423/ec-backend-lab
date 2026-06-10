@@ -2,8 +2,6 @@
 
 ## Phase1 商品管理API
 
-状態: 完了
-
 ### 実装内容
 
 * 商品CRUD
@@ -25,8 +23,6 @@
 ---
 
 ## Phase2 パフォーマンス改善
-
-状態: 完了
 
 ### 実装内容
 
@@ -52,8 +48,6 @@
 ---
 
 ## Phase3 非同期処理・検索
-
-状態: 完了
 
 ### 実装内容
 
@@ -83,16 +77,30 @@
 
 ## Phase4 認証・認可
 
-状態: 未着手
-
-### 実装予定
+### 実装内容
 
 * Spring Security
+* usersテーブル
+* BCrypt
 * Login API
-* JWT
-* Access Token
+* JWT Access Token
+* Refresh Token
+* Refresh API
+* Logout API
+* Current User API
+* USER / ADMIN Role
 * Role-Based Access Control
-* USER / ADMIN権限
+* 401 / 403 Error Handling
+
+### 学習ポイント
+
+* Stateless認証
+* JWT署名検証
+* Security Filter
+* SecurityContext
+* AuthenticationEntryPoint
+* AccessDeniedHandler
+* Role-Based Access Control
 
 ---
 
@@ -106,16 +114,16 @@
 * Retry Policy
 * Circuit Breaker
 * Monitoring
-* Read Replica
-* Sharding
 
 ---
 
 ## Optional
 
-### メッセージング
+### 分散システム
 
 * Kafka比較
+* Read Replica
+* Sharding
 
 ### インフラ
 
@@ -129,3 +137,7 @@
 * 日本語Analyzer
 * Synonym
 * Relevance Tuning
+
+### 認証・認可
+
+* OAuth2 / OIDC

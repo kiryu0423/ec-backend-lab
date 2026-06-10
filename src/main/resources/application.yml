@@ -39,3 +39,7 @@ spring:
 opensearch:
   host: localhost
   port: 9200
+
+jwt:
+  secret: "this-is-a-local-development-secret-key-for-jwt-authentication"
+  expiration-minutes: 60

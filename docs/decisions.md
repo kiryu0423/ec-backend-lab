@@ -267,3 +267,93 @@ OpenSearchを商品検索用Indexとして利用する。
 
 - PostgreSQLとOpenSearchの間に一時的な不整合が発生する
 - Outbox + RabbitMQ により最終的整合性を目指す
+
+# ADR-012 Spring Securityを採用する
+
+## 背景
+
+商品作成・更新・削除などの管理系APIを誰でも実行できる状態は危険である。
+
+## 決定
+
+Spring Securityを導入し、認証・認可を行う。
+
+## 理由
+
+- API単位でアクセス制御できる
+- USER / ADMIN の権限管理ができる
+- JWT認証へ拡張しやすい
+
+## 影響
+
+- SecurityConfigによるルーティング制御が必要になる
+- 401 / 403 のエラーハンドリングが必要になる
+
+---
+
+# ADR-013 JWTによるステートレス認証を採用する
+
+## 背景
+
+API認証では、サーバー側でSessionを持たずに認証情報を扱いたい。
+
+## 決定
+
+Access TokenとしてJWTを利用する。
+
+## 理由
+
+- サーバー側でSessionを保持しない
+- APIリクエストごとに認証情報を検証できる
+- フロントエンドや外部クライアントと連携しやすい
+
+## 影響
+
+- JWTの署名鍵・有効期限管理が必要になる
+- Token漏洩時のリスクを考慮する必要がある
+
+---
+
+# ADR-014 Refresh TokenをDBで管理する
+
+## 背景
+
+Access Tokenは短時間で期限切れにしつつ、ユーザーに頻繁な再ログインを要求しないようにしたい。
+
+## 決定
+
+Refresh TokenをDBに保存し、Access Token再発行に利用する。
+
+## 理由
+
+- Refresh Tokenをサーバー側で無効化できる
+- Logout時にRefresh Tokenを削除できる
+- 将来的にDevice管理やToken Rotationへ拡張できる
+
+## 影響
+
+- refresh_tokens テーブルが必要になる
+- Refresh Tokenの有効期限管理が必要になる
+
+---
+
+# ADR-015 Role-Based Access Controlを採用する
+
+## 背景
+
+一般ユーザーと管理者で利用できるAPIを分けたい。
+
+## 決定
+
+USER / ADMIN のRoleを定義し、APIごとに認可制御を行う。
+
+## 理由
+
+- 商品閲覧は公開できる
+- 商品作成・更新・削除はADMINのみに制限できる
+- 権限不足時は403 Forbiddenを返せる
+
+## 影響
+
+- usersテーブルにroleを保持する
+- JWTにrole claimを含める

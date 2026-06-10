@@ -10,24 +10,30 @@ Spring Bootを利用した商品管理APIです。
 
 ## Backend
 
-* Java 21
-* Spring Boot
-* Spring Data JPA
-* Hibernate
+- Java 21
+- Spring Boot
+- Spring Data JPA
+- Spring Security
+- Spring Cache
+- Spring AMQP
 
-## Database
+## Database / Middleware
 
-* PostgreSQL
-* Flyway
+- PostgreSQL
+- Redis
+- RabbitMQ
+- OpenSearch
+- Nginx
 
-## Documentation
+## Migration / Documentation
 
-* Swagger / OpenAPI
+- Flyway
+- Swagger / OpenAPI
 
-## Development Environment
+## Development
 
-* Docker Compose
-* Gradle
+- Docker Compose
+- Gradle
 
 ---
 
@@ -103,19 +109,54 @@ Spring Bootを利用した商品管理APIです。
 * 商品削除時の非同期Index削除
 * Reindex API
 
+## 認証・認可
+
+* Spring Security
+* BCryptによるパスワードハッシュ化
+* Login API
+* JWT Access Token
+* Refresh Token
+* Logout API
+* Current User API
+* Role-Based Access Control
+* 401 / 403 Error Handling
+
 ---
 
 # API一覧
 
-| Method | Path                             | Description    |
-| ------ | -------------------------------- | -------------- |
-| GET    | /api/products                    | 商品一覧取得     |
-| GET    | /api/products/{id}               | 商品詳細取得     |
-| POST   | /api/products                    | 商品作成        |
-| PUT    | /api/products/{id}               | 商品更新        |
-| DELETE | /api/products/{id}               | 商品削除        |
-| GET    | /api/products/search?keyword=xxx | 商品検索        |
-| POST   | /api/admin/search/reindex        | 商品Index再構築 |
+# API一覧
+
+## 認証
+
+| Method | Path | 説明 | 認可 |
+|---|---|---|---|
+| POST | /api/auth/login | ログインしてAccess Token / Refresh Tokenを発行 | 公開 |
+| POST | /api/auth/refresh | Refresh TokenでAccess Tokenを再発行 | 公開 |
+| POST | /api/auth/logout | Refresh Tokenを削除してログアウト | 公開 |
+
+## ユーザー
+
+| Method | Path | 説明 | 認可 |
+|---|---|---|---|
+| GET | /api/users/me | ログイン中ユーザー情報を取得 | USER / ADMIN |
+
+## 商品
+
+| Method | Path | 説明 | 認可 |
+|---|---|---|---|
+| GET | /api/products | 商品一覧取得 | 公開 |
+| GET | /api/products/{id} | 商品詳細取得 | 公開 |
+| POST | /api/products | 商品作成 | ADMIN |
+| PUT | /api/products/{id} | 商品更新 | ADMIN |
+| DELETE | /api/products/{id} | 商品削除 | ADMIN |
+| GET | /api/products/search?keyword=xxx | 商品検索 | 公開 |
+
+## 管理
+
+| Method | Path | 説明 | 認可 |
+|---|---|---|---|
+| POST | /api/admin/search/reindex | OpenSearchのIndexを再構築 | ADMIN |
 
 ---
 
@@ -184,13 +225,6 @@ src/main/java
 ---
 
 # 今後の実装予定
-
-## Phase4 認証・認可
-
-* Spring Security
-* Login API
-* JWT
-* Role-based Access Control
 
 ## Phase5 可用性・運用
 
