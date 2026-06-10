@@ -48,7 +48,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus,circuitbreakers
+        include: health,info,metrics,prometheus,circuitbreakers,ratelimiters
   endpoint:
     health:
       show-details: always
@@ -63,3 +63,9 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
+  ratelimiter:
+    instances:
+      productSearch:
+        limit-for-period: 5
+        limit-refresh-period: 10s
+        timeout-duration: 0

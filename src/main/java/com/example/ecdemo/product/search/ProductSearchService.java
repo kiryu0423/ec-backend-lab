@@ -1,10 +1,12 @@
 package com.example.ecdemo.product.search;
 
+import com.example.ecdemo.common.exception.TooManyRequestsException;
 import com.example.ecdemo.product.entity.Product;
 import com.example.ecdemo.product.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 
 import org.opensearch.action.delete.DeleteRequest;
@@ -47,9 +49,13 @@ public class ProductSearchService {
         }
     }
 
-    @CircuitBreaker(
-        name = "openSearch",
-        fallbackMethod = "fallbackSearch"
+    // @CircuitBreaker(
+    //     name = "openSearch",
+    //     fallbackMethod = "fallbackSearch"
+    // )
+    @RateLimiter(
+        name = "productSearch",
+        fallbackMethod = "fallbackSearchRateLimit"
     )
     public List<ProductDocument> search(String keyword) {
         try {
@@ -115,5 +121,15 @@ public class ProductSearchService {
             Throwable e
     ) {
         return List.of();
+    }
+
+    public List<ProductDocument> fallbackSearchRateLimit(
+            String keyword,
+            Throwable e
+    ) {
+        throw new TooManyRequestsException(
+                "Too many search requests",
+                e
+        );
     }
 }

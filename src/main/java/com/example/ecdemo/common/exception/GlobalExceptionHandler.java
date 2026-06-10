@@ -58,4 +58,15 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(TooManyRequestsException.class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public ErrorResponse handleTooManyRequests(
+        TooManyRequestsException e
+    ) {
+        return ErrorResponse.of(
+            "TOO_MANY_REQUESTS",
+            e.getMessage()
+        );
+    }
+
 }

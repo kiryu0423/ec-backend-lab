@@ -3,6 +3,7 @@ package com.example.ecdemo.common.config;
 import org.apache.http.HttpHost;
 import org.opensearch.client.RestClient;
 import org.opensearch.client.RestHighLevelClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,14 +11,17 @@ import org.springframework.context.annotation.Configuration;
 public class OpenSearchConfig {
 
     @Bean
-    public RestHighLevelClient openSearchClient() {
+    public RestHighLevelClient openSearchClient(
+            @Value("${opensearch.host}") String host,
+            @Value("${opensearch.port}") int port
+    ) {
         return new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost("localhost", 9200, "http")
+                        new HttpHost(host, port, "http")
                 ).setRequestConfigCallback(requestConfigBuilder ->
-                    requestConfigBuilder
-                        .setConnectTimeout(1000)
-                        .setSocketTimeout(2000)
+                        requestConfigBuilder
+                                .setConnectTimeout(1000)
+                                .setSocketTimeout(2000)
                 )
         );
     }

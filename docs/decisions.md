@@ -401,3 +401,41 @@ Resilience4j Circuit BreakerをOpenSearch検索処理に適用する。
 
 - OpenSearch障害時は検索結果として空配列を返す
 - Circuit Breakerの状態はActuatorで確認する
+
+# ADR-018 RabbitMQとKafkaの比較
+
+## 背景
+
+本プロジェクトでは、商品更新・削除後にOpenSearchのIndexを非同期で更新している。
+
+非同期処理の基盤としてRabbitMQを採用しているが、Kafkaも候補になり得るため、用途の違いを整理する。
+
+## 決定
+
+現時点ではRabbitMQを継続利用する。
+
+Kafkaは将来的なイベント基盤の候補として扱う。
+
+## 理由
+
+### RabbitMQが適している理由
+
+- 非同期ジョブ処理に向いている
+- Exchange / Queue / Routing Key により処理先を分けやすい
+- Retry / DLQ を構成しやすい
+- 今回の用途である「OpenSearch更新処理」に対して十分
+- 構成がKafkaより軽量
+
+### Kafkaが適しているケース
+
+- イベントを一定期間保存したい
+- 複数のConsumer Groupが同じイベントを読みたい
+- 分析・監査ログ・レコメンドなど複数用途にイベントを再利用したい
+- 大量イベントをPartitionで並列処理したい
+- 過去イベントをReplayしたい
+
+## 影響
+
+- 本プロジェクトではRabbitMQを使ってOutbox Eventを配送する
+- Kafkaは実装対象外とする
+- 将来的にイベント利用先が増えた場合はKafka移行を検討する

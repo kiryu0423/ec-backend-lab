@@ -106,8 +106,6 @@
 
 ## Phase5 可用性・運用
 
-状態: 完了
-
 ### 実装内容
 
 * Spring Boot Actuator
@@ -130,27 +128,113 @@
 
 ---
 
-## Optional
+## Phase6 アーキテクチャ・スケーリング
 
-### 分散システム
+### 実装・検討内容
 
-* Kafka比較
+* RabbitMQ / Kafka比較
+* Redis Distributed Lock
+* Rate Limiter
 * Read Replica
-* Sharding
+* Kubernetes概要
 
-### インフラ
+### 学習ポイント
 
-* Kubernetes
-* Deployment
-* Service
-* ConfigMap
+* メッセージング基盤の使い分け
+* 複数インスタンス起動時の排他制御
+* API保護
+* 読み取り負荷分散
+* コンテナオーケストレーション
 
-### 検索
+### Read Replica
 
-* 日本語Analyzer
-* Synonym
-* Relevance Tuning
+読み取り負荷が増えた場合、PostgreSQLのRead Replicaを検討する。
 
-### 認証・認可
+* GET系APIはReplica参照候補
+* 更新系APIはPrimary参照
+* 在庫・決済など強い整合性が必要な処理はPrimary参照
+* Replication Lagによる一時的な不整合を許容できるか検討する
 
-* OAuth2 / OIDC
+---
+
+## 発展項目
+
+## Phase7 認証・外部連携
+
+状態: 発展項目
+
+### 実装・検討内容
+
+- OAuth2
+- OIDC
+- Google Login
+- 外部IdP連携
+
+### 学習ポイント
+
+- 認可コードフロー
+- ID Token
+- Access Token
+- Resource Server
+- Identity Provider
+
+---
+
+## Phase8 大規模データ設計
+
+状態: 発展項目
+
+### 実装・検討内容
+
+- Sharding
+- Hot Shard
+- Read / Write分離
+- データ分割設計
+
+### 学習ポイント
+
+- Shard Key設計
+- Replication Lag
+- 分散トランザクション
+- データ整合性
+
+---
+
+## Phase9 検索高度化
+
+状態: 発展項目
+
+### 実装・検討内容
+
+- 日本語Analyzer
+- Synonym
+- Relevance Tuning
+- Suggest / Autocomplete
+
+### 学習ポイント
+
+- Analyzer
+- Tokenizer
+- 検索スコア
+- 表記ゆれ対応
+
+---
+
+## Phase10 運用・監視強化
+
+状態: 発展項目
+
+### 実装・検討内容
+
+- Prometheus
+- Grafana
+- 構造化ログ
+- Trace
+- Alert設計
+
+### 学習ポイント
+
+- Metrics収集
+- Dashboard設計
+- 分散トレーシング
+- 障害検知
