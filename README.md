@@ -1,6 +1,21 @@
 # EC Demo
 
-商品管理APIを題材に、バックエンド開発で重要なキャッシュ、非同期処理、検索、認証・認可、可用性設計を学習するためのプロジェクト。
+## Project Scope
+
+このプロジェクトは、商品管理APIを題材にしたバックエンド学習用プロジェクトです。
+
+単純なCRUD APIに留まらず、実務で重要になる以下の要素を段階的に実装しています。
+
+* DB設計
+* キャッシュ
+* HTTP Cache
+* 非同期処理
+* Outbox Pattern
+* 検索エンジン連携
+* 認証・認可
+* 可用性設計
+* メトリクス監視
+* スケーリング設計
 
 ---
 
@@ -24,12 +39,14 @@
 ## Infrastructure
 
 * Docker Compose
-* Kubernetes（学習中）
+* Kubernetes（概要のみ）
 
 ## Monitoring
 
 * Spring Boot Actuator
 * Resilience4j
+* Prometheus
+* Grafana
 
 ---
 
@@ -104,6 +121,15 @@ Spring Boot API
 * Read Replica設計検討
 * Kubernetes基礎学習
 
+## 運用監視
+
+* Prometheus
+* Grafana
+* HTTP Request Metrics
+* JVM Memory Metrics
+* HikariCP Metrics
+* Dashboard Visualization
+
 ---
 
 # 学習した設計パターン
@@ -133,7 +159,6 @@ Spring Boot API
 
 * OAuth2 / OIDC
 * Kafka
-* Prometheus / Grafana
 * OpenSearch日本語検索
 * Distributed Tracing
 * Kubernetes本格導入

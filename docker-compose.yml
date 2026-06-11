@@ -83,8 +83,29 @@ services:
     volumes:
       - opensearch-data:/usr/share/opensearch/data
 
+  prometheus:
+    image: prom/prometheus
+    container_name: ec-demo-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - app
+
+  grafana:
+    image: grafana/grafana
+    container_name: ec-demo-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
 volumes:
   product-api-postgres-data:
   redis-data:
   rabbitmq-data:
   opensearch-data:
+  grafana-data:

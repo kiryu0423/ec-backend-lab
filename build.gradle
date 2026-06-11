@@ -39,6 +39,7 @@ dependencies {
 	implementation 'io.github.resilience4j:resilience4j-circuitbreaker'
 	implementation 'io.github.resilience4j:resilience4j-timelimiter'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

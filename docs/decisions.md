@@ -439,3 +439,25 @@ Kafkaは将来的なイベント基盤の候補として扱う。
 - 本プロジェクトではRabbitMQを使ってOutbox Eventを配送する
 - Kafkaは実装対象外とする
 - 将来的にイベント利用先が増えた場合はKafka移行を検討する
+
+# ADR-019 Prometheus / GrafanaによるMetrics監視を導入する
+
+## 背景
+
+ActuatorでMetricsを確認できるが、時系列での可視化や継続的な監視には不十分である。
+
+## 決定
+
+PrometheusでMetricsを収集し、Grafanaで可視化する。
+
+## 理由
+
+- HTTPリクエスト数やレスポンス時間を時系列で確認できる
+- JVMメモリやDB接続数を監視できる
+- 障害調査や性能確認の入口になる
+
+## 影響
+
+- Prometheus / Grafanaをdocker-composeに追加する
+- `/actuator/prometheus` を公開する
+- Grafana Dashboardを手動で作成する

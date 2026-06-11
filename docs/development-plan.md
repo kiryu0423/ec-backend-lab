@@ -155,86 +155,20 @@
 * 在庫・決済など強い整合性が必要な処理はPrimary参照
 * Replication Lagによる一時的な不整合を許容できるか検討する
 
----
+## Phase7 運用監視
 
-## 発展項目
+### 実装内容
 
-## Phase7 認証・外部連携
-
-状態: 発展項目
-
-### 実装・検討内容
-
-- OAuth2
-- OIDC
-- Google Login
-- 外部IdP連携
+* Prometheus
+* Grafana
+* HTTP Request Metrics
+* JVM Memory Metrics
+* HikariCP Metrics
 
 ### 学習ポイント
 
-- 認可コードフロー
-- ID Token
-- Access Token
-- Resource Server
-- Identity Provider
-
----
-
-## Phase8 大規模データ設計
-
-状態: 発展項目
-
-### 実装・検討内容
-
-- Sharding
-- Hot Shard
-- Read / Write分離
-- データ分割設計
-
-### 学習ポイント
-
-- Shard Key設計
-- Replication Lag
-- 分散トランザクション
-- データ整合性
-
----
-
-## Phase9 検索高度化
-
-状態: 発展項目
-
-### 実装・検討内容
-
-- 日本語Analyzer
-- Synonym
-- Relevance Tuning
-- Suggest / Autocomplete
-
-### 学習ポイント
-
-- Analyzer
-- Tokenizer
-- 検索スコア
-- 表記ゆれ対応
-
----
-
-## Phase10 運用・監視強化
-
-状態: 発展項目
-
-### 実装・検討内容
-
-- Prometheus
-- Grafana
-- 構造化ログ
-- Trace
-- Alert設計
-
-### 学習ポイント
-
-- Metrics収集
-- Dashboard設計
-- 分散トレーシング
-- 障害検知
+* Metrics収集
+* Prometheus Scrape
+* Grafana Dashboard
+* APIリクエスト数の可視化
+* JVM / DB Connection Poolの監視
